@@ -5,7 +5,6 @@ import UserItem  from './components/users/UserItem'
 
 class App extends Component {
 
-
   render() {  
 
     return (
