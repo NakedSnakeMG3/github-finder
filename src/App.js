@@ -9,6 +9,8 @@ import About from './components/pages/About';
 import User from './components/users/User';
 import axios from 'axios';
 
+import GithubState from './context/github/GithubState';
+
 const App = () => {
   const [users, setUsers] = useState([]);
   const [user, setUser] = useState({});
@@ -64,47 +66,49 @@ const App = () => {
   };
 
   return (
-    <Router>
-      <div className='App'>
-        <Navbar icon='fa fa-github' title='Github Finder' />
-        <div className='container'>
-          <Alert alert={alert} />
-          <Switch>
-            <Route
-              exact
-              path='/'
-              render={props => (
-                <Fragment>
-                  <Search
-                    searchUsers={searchUsers}
-                    clearUsers={clearUsers}
-                    showClear={users.length > 0 ? true : false}
-                    setAlert={showAlert}
+    <GithubState>
+      <Router>
+        <div className='App'>
+          <Navbar icon='fa fa-github' title='Github Finder' />
+          <div className='container'>
+            <Alert alert={alert} />
+            <Switch>
+              <Route
+                exact
+                path='/'
+                render={props => (
+                  <Fragment>
+                    <Search
+                      searchUsers={searchUsers}
+                      clearUsers={clearUsers}
+                      showClear={users.length > 0 ? true : false}
+                      setAlert={showAlert}
+                    />
+                    <Users loading={loading} users={users} />
+                  </Fragment>
+                )}
+              ></Route>
+              <Route exact path='/about' component={About}></Route>
+              {/*la propiedad login se refiere al nombre dle usario en la api de github*/}
+              <Route
+                exact
+                path='/user/:login'
+                render={props => (
+                  <User
+                    {...props}
+                    getUser={getUser}
+                    getUserRepos={getUserRepos}
+                    user={user}
+                    loading={loading}
+                    repos={repos}
                   />
-                  <Users loading={loading} users={users} />
-                </Fragment>
-              )}
-            ></Route>
-            <Route exact path='/about' component={About}></Route>
-            {/*la propiedad login se refiere al nombre dle usario en la api de github*/}
-            <Route
-              exact
-              path='/user/:login'
-              render={props => (
-                <User
-                  {...props}
-                  getUser={getUser}
-                  getUserRepos={getUserRepos}
-                  user={user}
-                  loading={loading}
-                  repos={repos}
-                />
-              )}
-            ></Route>
-          </Switch>
+                )}
+              ></Route>
+            </Switch>
+          </div>
         </div>
-      </div>
-    </Router>
+      </Router>
+    </GithubState>
   );
 };
 
